@@ -13,17 +13,16 @@ import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.CreditCardNumber;
-import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.Data;
 
-@SuppressWarnings("deprecation")
 @Data
 @Entity
-@Table(name = "Taco_Order")
+@Table(name="Taco_Order")
 public class Order implements Serializable {
 
 	private static final long serialVersionUID = 1L;

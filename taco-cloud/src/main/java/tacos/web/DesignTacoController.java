@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,112 +16,73 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import tacos.Taco;
 import tacos.Ingredient;
 import tacos.Ingredient.Type;
 import tacos.Order;
-import tacos.data.TacoRepository;
+import tacos.Taco;
 import tacos.data.IngredientRepository;
+import tacos.data.TacoRepository;
 
-// tag::classShell[]
+
 @Controller
 @RequestMapping("/design")
 @SessionAttributes("order")
 public class DesignTacoController {
-  
-//end::classShell[]
 
-//tag::bothRepoProperties[]
-//tag::ingredientRepoProperty[]
-  private final IngredientRepository ingredientRepo;
-  
-//end::ingredientRepoProperty[]
-  private TacoRepository designRepo;
+	private final IngredientRepository ingredientRepo;
 
-//end::bothRepoProperties[]
-  
-  /*
-// tag::ingredientRepoOnlyCtor[]
-  @Autowired
-  public DesignTacoController(IngredientRepository ingredientRepo) {
-    this.ingredientRepo = ingredientRepo;
-  }
-// end::ingredientRepoOnlyCtor[]
-   */
+	private TacoRepository tacoRepo;
 
-  //tag::bothRepoCtor[]
-  @Autowired
-  public DesignTacoController(
-        IngredientRepository ingredientRepo, 
-        TacoRepository designRepo) {
-    this.ingredientRepo = ingredientRepo;
-    this.designRepo = designRepo;
-  }
+	@Autowired
+	public DesignTacoController(IngredientRepository ingredientRepo, 
+			TacoRepository tacoRepo) {
+		this.ingredientRepo = ingredientRepo;
+		this.tacoRepo = tacoRepo;
+	}
 
-  //end::bothRepoCtor[]
-  
-  // tag::modelAttributes[]
-  @ModelAttribute(name = "order")
-  public Order order() {
-    return new Order();
-  }
-  
-  @ModelAttribute(name = "taco")
-  public Taco taco() {
-    return new Taco();
-  }
+	@ModelAttribute(name = "order")
+	public Order order() {
+		return new Order();
+	}
 
-  // end::modelAttributes[]
-  // tag::showDesignForm[]
-  
-  @GetMapping
-  public String showDesignForm(Model model) {
-    List<Ingredient> ingredients = new ArrayList<>();
-    ingredientRepo.findAll().forEach(i -> ingredients.add(i));
-    
-    Type[] types = Ingredient.Type.values();
-    for (Type type : types) {
-      model.addAttribute(type.toString().toLowerCase(), 
-          filterByType(ingredients, type));      
-    }
+	@ModelAttribute(name = "design")
+	public Taco design() {
+		return new Taco();
+	}
 
-    return "design";
-  }
-//end::showDesignForm[]
+	@GetMapping
+	public String showDesignForm(Model model) {
+		List<Ingredient> ingredients = new ArrayList<>();
+		ingredientRepo.findAll().forEach(i -> ingredients.add(i));
 
-  //tag::processDesign[]
-  @PostMapping
-  public String processDesign(
-      @Valid Taco design, Errors errors, 
-      @ModelAttribute Order order) {
+		Type[] types = Ingredient.Type.values();
+		for (Type type : types) {
+			model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
+		}
 
-    if (errors.hasErrors()) {
-      return "design";
-    }
+		return "design";
+	}
 
-    Taco saved = designRepo.save(design);
-    order.addDesign(saved);
+	@PostMapping
+	public String processDesign(
+			@Valid Taco taco, Errors errors, 
+			@ModelAttribute Order order) {
 
-    return "redirect:/orders/current";
-  }
-  //end::processDesign[]
-  
-  private List<Ingredient> filterByType(
-      List<Ingredient> ingredients, Type type) {
-    return ingredients
-              .stream()
-              .filter(x -> x.getType().equals(type))
-              .collect(Collectors.toList());
-  }
+		if (errors.hasErrors()) {
+			return "design";
+		}
 
-  /*
-//tag::classShell[]
+		Taco saved = tacoRepo.save(taco);
+		order.addDesign(saved);
 
-  ...
+		return "redirect:/orders/current";
+	}
 
-//end::classShell[]
-   */
-//tag::classShell[]
+	private List<Ingredient> filterByType(List<Ingredient> ingredients, Type type) {
+		return ingredients
+				.stream()
+				.filter(x -> x.getType().equals(type))
+				.collect(Collectors.toList());
+	}
 
 }
-//end::classShell[]

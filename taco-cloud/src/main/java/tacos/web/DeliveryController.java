@@ -9,7 +9,7 @@ public class DeliveryController implements WebMvcConfigurer {
 
   @Override
   public void addViewControllers(ViewControllerRegistry registry) {
-    registry.addViewController("/").setViewName("home");
+    registry.addViewController("/delivery").setViewName("delivery");
   }
 
 }
