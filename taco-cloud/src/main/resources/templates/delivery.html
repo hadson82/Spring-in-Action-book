@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <title>Taco Cloud</title>
-  </head>
-  
-  <body>
-    <h1>Convinient deivery to your home!</h1>
-    <img th:src="@{/images/TacoCloud.png}"/>
-    
-    <a th:href="@{/}" id="home">home</a>  <a th:href="@{/design}" id="design">Design a taco</a>
-  </body>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Taco Cloud - delivery</title>
+</head>
+
+<body>
+	<form method="POST" th:action="@{/logout}" id="logoutForm">
+		<input type="submit" value="Logout" />
+	</form>
+	<h1>Convenient delivery to your home!</h1>
+	<img th:src="@{/images/TacoCloud.png}" />
+	<a th:href="@{/}" id="home">home</a>
+	<a th:href="@{/design}" id="design">Design a taco</a>
+</body>
 </html>
